@@ -26,6 +26,8 @@
       height: 100%;
       object-fit: cover;
       z-index: -1;
+      display: none;
+      /* Tampilkan setelah semua file siap */
     }
 
     .overlay {
@@ -42,6 +44,8 @@
       color: white;
       text-align: center;
       padding: 20px;
+      display: none;
+      /* Tampilkan setelah semua file siap */
     }
 
     .text {
@@ -79,14 +83,28 @@
         transform: translateY(0);
       }
     }
+
+    /* Loading indicator */
+    .loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1rem;
+      color: black;
+    }
   </style>
 </head>
 <body>
-  <video class="video-background" autoplay muted loop>
+  <div class="loading" id="loading">
+    Mengunduh file...
+  </div>
+
+  <video class="video-background" autoplay muted loop id="video">
     <source src="https://github.com/mariat0n/res/raw/refs/heads/main/75595968.mp4" type="video/mp4">
   </video>
 
-  <div class="overlay">
+  <div class="overlay" id="overlay">
     <p class="text" id="text1">
       "Terima kasih sudah selalu sabar menghadapi aku yang kadang suka ngeselin. Kamu itu kayak malaikat yang dikirim buat nguji kesabaran, tapi tetap nggak pernah nyerah. Aku beruntung banget punya kamu!"
     </p>
@@ -103,5 +121,73 @@
       "Kamu itu sabar banget, sampai aku mikir, mungkin kesabaranmu ada di level cheat mode. Aku beruntung banget punya seseorang yang tetap bertahan meskipun aku sering bikin kesal. Makasih ya, jangan bosen sama aku!"
     </p>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const video = document.getElementById("video");
+      const overlay = document.getElementById("overlay");
+      const loading = document.getElementById("loading");
+
+      // Daftar file yang harus dicek
+      const files = [
+        "https://github.com/mariat0n/res/raw/refs/heads/main/75595968.mp4", // Video background
+        // "https://github.com/mariat0n/res/raw/refs/heads/main/background.jpg", // Contoh gambar tambahan
+        // "https://github.com/mariat0n/res/raw/refs/heads/main/audio.mp3" // Contoh file audio
+      ];
+
+      let downloadedFiles = 0; // Menghitung file yang sudah siap
+
+      // Cek apakah file tersedia di cache browser
+      const checkFileAvailability = (fileUrl) => {
+        return new Promise((resolve) => {
+          fetch(fileUrl, {
+            method: "HEAD"
+          })
+          .then(response => {
+            if (response.ok) {
+              resolve(true); // File tersedia, tidak perlu download
+            } else {
+              downloadFile(fileUrl, resolve);
+            }
+          })
+          .catch(() => {
+            downloadFile(fileUrl, resolve);
+          });
+        });
+      };
+
+      // Fungsi untuk mendownload file jika tidak tersedia
+      const downloadFile = (fileUrl, resolve) => {
+        const link = document.createElement("a");
+        link.href = fileUrl;
+        link.download = fileUrl.split("/").pop();
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Simulasi delay sebelum file siap
+        setTimeout(() => resolve(true), 5000);
+      };
+
+      // Fungsi untuk mengecek semua file
+      const checkAllFiles = async () => {
+        for (let file of files) {
+          await checkFileAvailability(file);
+          downloadedFiles++;
+          loading.innerText = `Mengunduh file... (${downloadedFiles}/${files.length})`;
+        }
+        startPage();
+      };
+
+      // Mulai tampilan setelah semua file siap
+      const startPage = () => {
+        loading.style.display = "none";
+        video.style.display = "block";
+        overlay.style.display = "flex";
+      };
+
+      checkAllFiles();
+    });
+  </script>
 </body>
 </html>
