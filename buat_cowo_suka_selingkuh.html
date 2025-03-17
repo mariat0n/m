@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      display: none;
+      /* Tampilkan setelah semua file siap */
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      display: none;
+      /* Tampilkan setelah semua file siap */
+    }
+
+    .text {
+      font-size: 0.8rem;
+      opacity: 0;
+      text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
+      animation: fadeIn 2s forwards;
+    }
+
+    /* Animasi muncul secara bergantian */
+    #text1 {
+      animation-delay: 0s;
+    }
+    #text2 {
+      animation-delay: 2s;
+    }
+    #text3 {
+      animation-delay: 4s;
+    }
+    #text4 {
+      animation-delay: 6s;
+    }
+    #text5 {
+      animation-delay: 8s;
+    }
+
+    /* Animasi fade-in */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Loading indicator */
+    .loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1rem;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">
+    Mengunduh file...
+  </div>
+
+  <video class="video-background" autoplay muted loop id="video">
+    <source src="https://github.com/mariat0n/res/raw/refs/heads/main/94221537.mp4" type="video/mp4">
+  </video>
+
+  <div class="overlay" id="overlay">
+    <p class="text" id="text1">
+      "Bro, kalau lo masih main dua kaki, siap-siap aja jatuh sendiri. Cewek bisa sabar, tapi karma nggak pernah tidur."
+    </p>
+    <p class="text" id="text2">
+      "Selingkuh itu bukan gaya, itu tanda lo nggak siap buat serius. Mau jadi cowok keren? Setia dulu, baru bisa dibilang lelaki sejati."
+    </p>
+    <p class="text" id="text3">
+      "Main hati banyak cewek nggak bikin lo jadi alpha male, bro. Justru makin keliatan nggak bisa pegang komitmen."
+    </p>
+    <p class="text" id="text4">
+      "Cewek bukan game yang bisa lo mainkan level demi level. Jangan harap dapat yang terbaik kalau lo sendiri nggak bisa jadi yang terbaik."
+    </p>
+    <p class="text" id="text5">
+      "Kalau selingkuh bikin lo bangga, siap-siap aja suatu hari kena karma yang lebih parah. Hidup ini adil, bro."
+    </p>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const video = document.getElementById("video");
+      const overlay = document.getElementById("overlay");
+      const loading = document.getElementById("loading");
+
+      // Daftar file yang harus dicek
+      const files = [
+        "https://github.com/mariat0n/res/raw/refs/heads/main/94221537.mp4", // Video background
+        // "https://github.com/mariat0n/res/raw/refs/heads/main/background.jpg", // Contoh gambar tambahan
+        // "https://github.com/mariat0n/res/raw/refs/heads/main/audio.mp3" // Contoh file audio
+      ];
+
+      let downloadedFiles = 0; // Menghitung file yang sudah siap
+
+      // Cek apakah file tersedia di cache browser
+      const checkFileAvailability = (fileUrl) => {
+        return new Promise((resolve) => {
+          fetch(fileUrl, {
+            method: "HEAD"
+          })
+          .then(response => {
+            if (response.ok) {
+              resolve(true); // File tersedia, tidak perlu download
+            } else {
+              downloadFile(fileUrl, resolve);
+            }
+          })
+          .catch(() => {
+            downloadFile(fileUrl, resolve);
+          });
+        });
+      };
+
+      // Fungsi untuk mendownload file jika tidak tersedia
+      const downloadFile = (fileUrl, resolve) => {
+        const link = document.createElement("a");
+        link.href = fileUrl;
+        link.download = fileUrl.split("/").pop();
+        document.body.appendChild(link);
+        //link.click();
+        document.body.removeChild(link);
+
+        // Simulasi delay sebelum file siap
+        setTimeout(() => resolve(true), 5000);
+      };
+
+      // Fungsi untuk mengecek semua file
+      const checkAllFiles = async () => {
+        for (let file of files) {
+          await checkFileAvailability(file);
+          downloadedFiles++;
+          loading.innerText = `Mengunduh file... (${downloadedFiles}/${files.length})`;
+        }
+        startPage();
+      };
+
+      // Mulai tampilan setelah semua file siap
+      const startPage = () => {
+        loading.style.display = "none";
+        video.style.display = "block";
+        overlay.style.display = "flex";
+      };
+
+      checkAllFiles();
+    });
+  </script>
+</body>
+</html>
