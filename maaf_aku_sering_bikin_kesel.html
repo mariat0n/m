@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .text {
+      font-size: 0.8rem;
+      opacity: 0;
+      text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
+      animation: fadeIn 2s forwards;
+    }
+
+    /* Animasi muncul secara bergantian */
+    #text1 {
+      animation-delay: 0s;
+    }
+    #text2 {
+      animation-delay: 2s;
+    }
+    #text3 {
+      animation-delay: 4s;
+    }
+    #text4 {
+      animation-delay: 6s;
+    }
+    #text5 {
+      animation-delay: 8s;
+    }
+
+    /* Animasi fade-in */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <video class="video-background" autoplay muted loop>
+    <source src="" type="video/mp4">
+  </video>
+
+  <div class="overlay">
+    <p class="text" id="text1">
+      "Terima kasih sudah selalu sabar menghadapi aku yang kadang suka ngeselin. Kamu itu kayak malaikat yang dikirim buat nguji kesabaran, tapi tetap nggak pernah nyerah. Aku beruntung banget punya kamu!"
+    </p>
+    <p class="text" id="text2">
+      "Aku tahu aku sering bikin kamu kesal, tapi entah kenapa kamu tetap di sini, tetap sabar, tetap baik. Kalau ada gelar ‘Manusia Paling Sabar Sedunia’, pasti kamu yang menang. Terima kasih ya, kamu luar biasa!"
+    </p>
+    <p class="text" id="text3">
+      "Maaf kalau aku sering bikin kamu jengkel dengan semua keusilanku. Aku cuma ingin kamu tahu, meskipun aku ngeselin, aku selalu sayang dan bersyukur punya kamu."
+    </p>
+    <p class="text" id="text4">
+      "Kadang aku suka ngetes kesabaran kamu, dan ajaibnya kamu nggak pernah nyerah. Kalau kamu capek, bilang ya? Aku nggak mau kehilangan seseorang sebaik kamu."
+    </p>
+    <p class="text" id="text5">
+      "Kamu itu sabar banget, sampai aku mikir, mungkin kesabaranmu ada di level cheat mode. Aku beruntung banget punya seseorang yang tetap bertahan meskipun aku sering bikin kesal. Makasih ya, jangan bosen sama aku!"
+    </p>
+  </div>
+</body>
+</html>
