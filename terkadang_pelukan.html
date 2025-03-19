@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Background dengan Musik</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      display: none;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+
+    .text {
+      font-size: 0.8rem;
+      opacity: 0;
+      text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
+      animation: fadeIn 2s forwards;
+    }
+
+    #text1 {
+      animation-delay: 0s;
+    }
+    #text2 {
+      animation-delay: 2s;
+    }
+    #text3 {
+      animation-delay: 4s;
+    }
+    #text4 {
+      animation-delay: 6s;
+    }
+    #text5 {
+      animation-delay: 8s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1rem;
+      color: black;
+    }
+
+    .music-button {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      padding: 15px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: none;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">
+    Mengunduh file...
+  </div>
+
+  <video class="video-background" autoplay muted loop id="video">
+    <source src="https://github.com/mariat0n/res/raw/refs/heads/main/94221537.mp4" type="video/mp4">
+  </video>
+
+  <div class="overlay" id="overlay">
+    <p class="text" id="text1">
+      Terkadang
+      </p>
+    <p class="text" id="text2">
+      yang kamu butuhkan bukan jawaban
+      </p>
+    <p class="text" id="text3">
+      tapi pelukan yang bilang
+      </p>
+    <p class="text" id="text4">
+      "Kamu nggak sendiri
+      </p>
+    <p class="text" id="text5">
+      aku di sini"
+      </p>
+  </div>
+
+  <audio id="audio" loop>
+    <source src="https://github.com/mariat0n/res0/raw/refs/heads/main/melodic.mp3" type="audio/mp3">
+  </audio>
+
+  <button class="music-button" id="musicButton">Last Goo</button>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const video = document.getElementById("video");
+      const overlay = document.getElementById("overlay");
+      const loading = document.getElementById("loading");
+      const musicButton = document.getElementById("musicButton");
+      const audio = document.getElementById("audio");
+
+      const files = [
+        "https://github.com/mariat0n/res/raw/refs/heads/main/94221537.mp4",
+        "https://github.com/mariat0n/res0/raw/refs/heads/main/melodic.mp3"
+      ];
+
+      let downloadedFiles = 0;
+
+      const checkFileAvailability = (fileUrl) => {
+        return new Promise((resolve) => {
+          fetch(fileUrl, {
+            method: "HEAD"
+          })
+          .then(response => {
+            if (response.ok) {
+              resolve(true);
+            } else {
+              downloadFile(fileUrl, resolve);
+            }
+          })
+          .catch(() => {
+            downloadFile(fileUrl, resolve);
+          });
+        });
+      };
+
+      const downloadFile = (fileUrl, resolve) => {
+        setTimeout(() => resolve(true), 2000);
+      };
+
+      const checkAllFiles = async () => {
+        for (let file of files) {
+          await checkFileAvailability(file);
+          downloadedFiles++;
+          loading.innerText = `Mengunduh file... (${downloadedFiles}/${files.length})`;
+        }
+        showPlayButton();
+      };
+
+      const showPlayButton = () => {
+        loading.style.display = "none";
+        musicButton.style.display = "block";
+      };
+
+      const startPage = () => {
+        musicButton.style.display = "none";
+        video.style.display = "block";
+        overlay.style.display = "flex";
+      };
+
+      musicButton.addEventListener("click", () => {
+        audio.play().then(() => {
+          startPage();
+        }).catch(error => {
+          console.log("User interaction required to play audio", error);
+        });
+      });
+
+      checkAllFiles();
+    });
+  </script>
+</body>
+</html>
